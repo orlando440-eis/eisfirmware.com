@@ -44,36 +44,30 @@ class FormHandler {
                 formObject[key] = value;
             });
 
-            console.log('Sending form data:', formObject); // Debug log
-
             const response = await fetch('https://submit-form.com/4EDnlaAwC', {
                 method: 'POST',
-                body: formData,
                 headers: {
+                    'Content-Type': 'application/json',
                     'Accept': 'application/json'
-                }
+                },
+                body: JSON.stringify(formObject)
             });
-
-            const responseData = await response.json();
-            console.log('Server response:', responseData); // Debug log
 
             if (!response.ok) {
                 const errorDetails = `Status: ${response.status}, StatusText: ${response.statusText}`;
-                console.error('Form submission failed:', errorDetails, responseData);
+                console.error('Form submission failed:', errorDetails);
                 throw new Error(`Form submission failed! ${errorDetails}`);
             }
+
+            const responseData = await response.json();
+            console.log('Server response:', responseData);
 
             this.showSuccess('Thank you! Your project information has been submitted.');
             this.form.reset();
 
         } catch (error) {
-            console.error('Detailed error:', {
-                message: error.message,
-                stack: error.stack,
-                response: error.response
-            });
-            
-            this.showError(`There was a problem submitting your form. Please try again later. Code ${error.message}.`);
+            console.error('Submission error:', error);
+            this.showError('There was a problem submitting your form. Please try again later.');
         } finally {
             submitButton.innerHTML = originalButtonText;
             submitButton.disabled = false;
