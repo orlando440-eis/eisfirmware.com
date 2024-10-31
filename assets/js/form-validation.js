@@ -38,11 +38,13 @@ class FormHandler {
             submitButton.innerHTML = 'Sending...';
             submitButton.disabled = true;
 
-            const formData = new FormData(this.form);
-            const formObject = {};
-            formData.forEach((value, key) => {
-                formObject[key] = value;
-            });
+            const formObject = {
+                name: this.form.querySelector('#name').value,
+                email: this.form.querySelector('#email').value,
+                company: this.form.querySelector('#company').value || '',
+                message: this.form.querySelector('#message').value,
+                consultDate: this.form.querySelector('#consultDate').value || ''
+            };
 
             const response = await fetch('https://submit-form.com/4EDnlaAwC', {
                 method: 'POST',
@@ -54,14 +56,10 @@ class FormHandler {
             });
 
             if (!response.ok) {
-                const errorDetails = `Status: ${response.status}, StatusText: ${response.statusText}`;
-                console.error('Form submission failed:', errorDetails);
-                throw new Error(`Form submission failed! ${errorDetails}`);
+                throw new Error(`Form submission failed! Status: ${response.status}`);
             }
 
             const responseData = await response.json();
-            console.log('Server response:', responseData);
-
             this.showSuccess('Thank you! Your project information has been submitted.');
             this.form.reset();
 
