@@ -46,7 +46,8 @@ class FormHandler {
                 consultDate: this.form.querySelector('#consultDate').value || ''
             };
 
-            const response = await fetch('https://submit-form.com/4EDnlaAwC', {
+            //https://submit-form.com/4EDnlaAwC
+            const response = await fetch('https://formsubmit.co/ajax/1ef663c9c54096df89089bd48e81e4b5', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -56,12 +57,20 @@ class FormHandler {
             });
 
             if (!response.ok) {
+                const errorText = await response.text();
+                console.error('Server response:', errorText);
                 throw new Error(`Form submission failed! Status: ${response.status}`);
             }
 
-            const responseData = await response.json();
-            this.showSuccess('Thank you! Your project information has been submitted.');
-            this.form.reset();
+            // Only try to parse JSON if we get a 200 response
+            if (response.status === 200) {
+                const responseData = await response.json();
+                this.showSuccess('Thank you! Your project information has been submitted.');
+                this.form.reset();
+            } else {
+                this.showSuccess('Thank you! Your project information has been submitted.');
+                this.form.reset();
+            }
 
         } catch (error) {
             console.error('Submission error:', error);
