@@ -46,7 +46,7 @@ class FormHandler {
                 consultDate: this.form.querySelector('#consultDate').value || ''
             };
 
-            //https://submit-form.com/4EDnlaAwC
+            // https://submit-form.com/4EDnlaAwC
             const response = await fetch('https://formsubmit.co/ajax/1ef663c9c54096df89089bd48e81e4b5', {
                 method: 'POST',
                 headers: {
